@@ -1,0 +1,18 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: mapi1-scaledobject
+  namespace: keda
+spec:
+  idleReplicaCount: 1
+  minReplicaCount: 2
+  maxReplicaCount: 5
+  scaleTargetRef:
+    kind: StatefulSet
+    name: dummy1
+  triggers:
+    - type: metrics-api
+      metadata:
+        targetValue: "3"
+        url: "http://10.233.102.54/metrics/worker1.json"
+        valueLocation: 'worker.scale_num'

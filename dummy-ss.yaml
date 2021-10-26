@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  ports:
+  - port: 80
+    name: web
+  clusterIP: None
+  selector:
+    app: web
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dummy
+  namespace: keda
+spec:
+  selector:
+    matchLabels:
+      app: web
+  serviceName: "web"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: web
+        image: 'nginx:latest'
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dummy1
+  namespace: keda
+spec:
+  selector:
+    matchLabels:
+      app: web
+  serviceName: "web"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: web
+        image: 'nginx:latest'
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dummy2
+  namespace: keda
+spec:
+  selector:
+    matchLabels:
+      app: web
+  serviceName: "web"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: web
+        image: 'nginx:latest'
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/nginx/html
